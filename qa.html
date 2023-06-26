@@ -1,0 +1,107 @@
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  #fullscreen-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    cursor: grab;
+  }
+
+  #fullscreen-container.grabbing {
+    cursor: grabbing;
+  }
+
+  #fullscreen-img {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+    touch-action: pan-y;
+    user-select: none;
+  }
+
+  /* Responsividade */
+  @media (max-width: 768px) {
+    /* Ajuste para telas menores que 768 pixels de largura */
+    #fullscreen-img {
+      object-fit: contain;
+    }
+  }
+</style>
+<script>
+  window.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('fullscreen-container');
+    const image = document.getElementById('fullscreen-img');
+
+    let isDragging = false;
+    let startX;
+    let startY;
+
+    container.addEventListener('mousedown', function(e) {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      container.classList.add('grabbing');
+    });
+
+    container.addEventListener('mousemove', function(e) {
+      if (!isDragging) return;
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+      container.scrollLeft -= deltaX;
+      container.scrollTop -= deltaY;
+      startX = e.clientX;
+      startY = e.clientY;
+    });
+
+    container.addEventListener('mouseup', function() {
+      isDragging = false;
+      container.classList.remove('grabbing');
+    });
+
+    container.addEventListener('mouseleave', function() {
+      isDragging = false;
+      container.classList.remove('grabbing');
+    });
+
+    // Para dispositivos de toque
+    container.addEventListener('touchstart', function(e) {
+      const touch = e.touches[0];
+      isDragging = true;
+      startX = touch.clientX;
+      startY = touch.clientY;
+      container.classList.add('grabbing');
+    });
+
+    container.addEventListener('touchmove', function(e) {
+      if (!isDragging) return;
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - startX;
+      const deltaY = touch.clientY - startY;
+      container.scrollLeft -= deltaX;
+      container.scrollTop -= deltaY;
+      startX = touch.clientX;
+      startY = touch.clientY;
+    });
+
+    container.addEventListener('touchend', function() {
+      isDragging = false;
+      container.classList.remove('grabbing');
+    });
+
+    container.addEventListener('touchcancel', function() {
+      isDragging = false;
+      container.classList.remove('grabbing');
+    });
+  });
+</script>
+</head>
+<body>
+  <div id="fullscreen-container">
+    <img id="fullscreen-img" src="images/QA.jpeg" alt="EmBreve!">
+  </div>
+</body>
